@@ -1,111 +1,74 @@
-//11/26/19 
+//12/16/19 
 import React from 'react';
 
 class Calculator extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			display:'0',
-			decimalCheck:''
+			expFrag:'0',
+			expression:''
+			//operatorClicked: true;// if operator was clicked then all next input gets replaced.
 		};
 	};
 
-    	/*function called in each input buttons onClick event handler. It receives as an arguement the number correspoding to each button. 
-    	if an arithmetic character is the last character in the state string, another following arithmetic 
-    	character cannot be placed after.*/
-   		/*if state == 0 set desplay prop to input (to replace). other wise concat input 
-	    dont allow the user to repeat 0's ie 00+8*/
+	// MIMIC the windows built in calculator
+	// enter a series of numbers once a arithmetic operator is entered 
+	// 1) display the number string entered followed by the operator entered 
+	// 2) clear the bottom display of numbers
     	numberDisplay = (input) => {
-    		let display = [...this.state.display] , decimalCheck = [ ...this.state.decimalCheck];
-    		let target = display[display.length - 1];
-    		let regex = /\D/;
-    		// let nonDigitExceptDecimal = /\d^./
-    		if( this.state.display == '0'){
-    			if(/\d/.test(input)){
-    				this.setState({
-    				display: input.toString() ,
-    				decimalCheck: input.toString()
-
-    				})
-    			}
-    			else{
-    				this.setState({
-    				display: this.state.display.concat(input) ,
-    				decimalCheck: this.state.display.concat(input)
-    				})
-    			}
-    			//if a decimal exist in input string dont allow the decimal button to push a decimal into the state. 
-    		    //if an arithmetic operator gets inputted only check wht comes after the operator and when anothr gets entered clear the array
+    		if( this.state.expFrag == '0' && input == '0'){
+    			return;
     		}else{
-    			if((regex.test(target)=== true) && (regex.test(input)=== true)){
-	    			return;
-	    		}else if( decimalCheck.includes('.') && input === '.'){
-	    			return;
-	    		}else{
-			    		this.setState({
-			    			display: this.state.display.concat(input) ,
-			    			decimalCheck: this.state.decimalCheck
-		    		})
-		    	}
-    		}
-    	}
-
-    		// sets the state to default (0)
-    		 clearEntry = () => {
-    			this.setState({
-    				display:'0', 
-    				decimalCheck: this.state.decimalCheck
-    			})
+    		  this.setState({
+    			expFrag:this.state.expFrag.concat(input),
+    			expression:this.state.expression
+    		  });
     		};
+    	};
+   
+    	expAppend = () => {
+    		this.setState({
+    			expFrag: this.state.expFrag,
+    			expression: this.state.expression.concat(this.state.expFrag)
+    		});
+    	};
 
-    		clearDecimalCheck = () => {
-    			this.setState({
-    				display: this.state.display,
-    				decimalCheck: ''
-    			});
-    		}
+    	resetExpFrag = () => {
+    		this.setState({
+    			expFrag:'0',
+    			expression: this.state.expression
+    		});
+    		// alert(this.state.expression);
+    	};
 
-    		//deletes the character at the end of the state display string
-    		backspace = () =>{
-    			//slice portion and set
-    			if( this.state.display.length == 1){
-    				this.setState({
-    					display:'0', 
-    					decimalCheck: this.state.decimalCheck
-    				})
-    			}else{
-	    			let stateCopy = {...this.state};
-	    			let stateCopySliced = stateCopy.display.slice(0,stateCopy.display.length-1);
-	    			this.setState({
-	    				display:stateCopySliced , 
-	    				decimalCheck: this.state.decimalCheck
-	    			})
-	    		}
-    		}
+    	appendReset = () =>{
+    		// this.expAppend();
+    		// this.resetExpFrag();
 
-    		multiplyCl = () => {
-    			this.numberDisplay('X');
-    			this.clearDecimalCheck();
-    		}
+    	}
+    // sets the state to default (0)
+    clearEntry = () => {
+    	this.setState({
+    		expFrag:'0'
+    	});
+    };
 
-
-    		//TBA: sets the state to default & clears the history 
-    		// let allClear = () =>{
-
-    		// }
- 
-		//TODO: Get the arithmetic operator buttons to work
-		//TODO: Decimal restriction logic (copy a peice of the state into a separate property that is checked for decimals )
-    	//BUG: new numbers dont 
-    	//TODO: Program number signing button
-    	//TODO: Program Left and Right Parenthesis
+    //deletes the character at the end of the state display string
+    backspace = () =>{
+    	//slice portion and set
+    	if( this.state.display.length == 1){
+    		this.setState({
+    			expFrag:'0'
+    		})
+    	}else{
+	    	let stateCopy = {...this.state};
+	    	let stateCopySliced = stateCopy.display.slice(0,stateCopy.display.length-1);
+	    	this.setState({
+	    		expFrag:stateCopySliced
+	    	})
+	    }
+    }
     
-	clear = () =>{
-		this.setState({
-			display:'0', 
-			decimalCheck: this.state.decimalCheck
-		});
-	}
 	render(){
 		return(
 	   <div>
@@ -116,25 +79,25 @@ class Calculator extends React.Component{
 		            <button id="clearEntry" onClick={ () => this.clearEntry()}>CE</button>
 		            <button id="allClear" >C</button>
 		            <button id="backspace" onClick={() => this.backspace()}>bck</button>
-		            <button id="division"onClick={() => this.numberDisplay('/')}>/</button>
+		            <button id="division"onClick={() => this.numberDisplay('/') }>/</button>
 		         </div>
 		         <div class="b">
-		            <button id="seven" onClick ={() => this.numberDisplay('7')}>7</button> 
+		            <button id="seven" onClick ={() => this.numberDisplay('7')}></button> 
 		            <button id="eight" onClick ={() => this.numberDisplay('8')}>8</button>
 		            <button id="nine" onClick ={() => this.numberDisplay('9')}>9</button>
-		            <button id="multiply" onClick ={() => this.multiplyCl()}>X</button>
+		            <button id="multiply" onClick ={ this.numberDisplay('X')}>X</button>
 		         </div>
 		         <div class="b">
 		            <button id="six" onClick ={() => this.numberDisplay('6')}>6</button>
 		            <button id="five" onClick ={() => this.numberDisplay('5')}>5</button>
 		            <button id="four" onClick ={() => this.numberDisplay('4')}>4</button>
-		            <button id="subtract" onClick ={() => this.numberDisplay('-') , () => this.clearDecimalCheck()}>-</button>
+		            <button id="subtract" onClick ={() => this.numberDisplay('-')}>-</button>
 		         </div>
 		         <div class="b">
 		            <button id="one" onClick ={() => this.numberDisplay('1')}>1</button>
 		            <button id="two" onClick ={() => this.numberDisplay('2')}>2</button>
 		            <button id="three" onClick ={() => this.numberDisplay('3')}>3</button>
-		            <button id="add" onClick ={() => this.numberDisplay('+') ,this.clearDecimalCheck()}>+</button>
+		            <button id="add" onClick ={() => this.numberDisplay('+')}>+</button>
 		         </div>
 		         <div class="b">
 		            <button id="sign">+/-</button>
@@ -152,5 +115,52 @@ class Calculator extends React.Component{
 };
 
 export default Calculator;
+
+
+
+
+
+
+
+
+// GRAVEYARD FOR OLD numberDisplay
+
+/*function called in each input buttons onClick event handler. It receives as an arguement the number correspoding to each button. 
+    	if an arithmetic character is the last character in the state string, another following arithmetic 
+    	character cannot be placed after.*/
+   		/*if state == 0 set desplay prop to input (to replace). other wise concat input 
+	    dont allow the user to repeat 0's ie 00+8*/
+// let display = [...this.state.display] , decimalCheck = [...this.state.decimalCheck];
+//     		let target = display[display.length - 1];
+//     		let regex = /\D/;
+//     		// let nonDigitExceptDecimal = /\d^./
+//     		if( this.state.display == '0'){
+//     			if(/\d/.test(input)){
+//     				this.setState({
+//     					display: input.toString() ,
+//     					decimalCheck: input.toString()
+
+//     				})
+//     			}
+//     			else{
+//     				this.setState({
+//     					display: this.state.display.concat(input) ,
+//     					decimalCheck: this.state.decimalCheck.concat(input)
+//     				})
+//     			}
+//     			//if a decimal exist in input string dont allow the decimal button to push a decimal into the state. 
+//     		    //if an arithmetic operator gets inputted only check wht comes after the operator and when anothr gets entered clear the array
+//     		}else{
+//     			if((regex.test(target)=== true) && (regex.test(input)=== true)){
+// 	    			return;
+// 	    		}else if( decimalCheck.includes('.') && input === '.'){
+// 	    			return;
+// 	    		}else{
+// 			    		this.setState({
+// 			    			display: this.state.display.concat(input) ,
+// 			    			decimalCheck: this.state.decimalCheck
+// 		    		})
+// 		    	}
+//     		}
 
 
