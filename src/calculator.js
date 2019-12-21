@@ -1,4 +1,4 @@
-//12/16/19 
+//12/18/19 
 import React from 'react';
 
 class Calculator extends React.Component{
@@ -7,7 +7,6 @@ class Calculator extends React.Component{
 		this.state = {
 			expFrag:'0',
 			expression:''
-			//operatorClicked: true;// if operator was clicked then all next input gets replaced.
 		};
 	};
 
@@ -16,7 +15,8 @@ class Calculator extends React.Component{
 	// 1) display the number string entered followed by the operator entered 
 	// 2) clear the bottom display of numbers
     	numberDisplay = (input) => {
-    		if( this.state.expFrag == '0' && input == '0'){
+    		//accept button input and prevent preceding trailing zeros
+    		if( this.state.expFrag === '0' && input === '0'){
     			return;
     		}else{
     		  this.setState({
@@ -41,17 +41,16 @@ class Calculator extends React.Component{
     		// alert(this.state.expression);
     	};
 
-    	appendReset = () =>{
-    		// this.expAppend();
-    		// this.resetExpFrag();
-
+    	// program the alert function to wait before executing
+    	appendReset = (operator) =>{
+    		this.numberDisplay(operator ,alert(this.state.expFrag) );
     	}
-    // sets the state to default (0)
-    clearEntry = () => {
-    	this.setState({
-    		expFrag:'0'
-    	});
-    };
+
+    	clearEntry = () => {
+    		this.setState({
+    			expFrag:'0'
+    		});
+    	};
 
     //deletes the character at the end of the state display string
     backspace = () =>{
@@ -74,18 +73,18 @@ class Calculator extends React.Component{
 	   <div>
 			 <h1>Calculator</h1>
 	         <div id="parent">
-		          <input id="display" dir="rtl" value={this.state.display}/><br/>
+		          <input id="display" dir="rtl" value={this.state.expFrag}/><br/>
 		          <div class="b">
 		            <button id="clearEntry" onClick={ () => this.clearEntry()}>CE</button>
 		            <button id="allClear" >C</button>
 		            <button id="backspace" onClick={() => this.backspace()}>bck</button>
-		            <button id="division"onClick={() => this.numberDisplay('/') }>/</button>
+		            <button id="division"onClick={() => this.appendReset('/')}>/</button>
 		         </div>
 		         <div class="b">
-		            <button id="seven" onClick ={() => this.numberDisplay('7')}></button> 
+		            <button id="seven" onClick ={() => this.numberDisplay('7')}>7</button> 
 		            <button id="eight" onClick ={() => this.numberDisplay('8')}>8</button>
 		            <button id="nine" onClick ={() => this.numberDisplay('9')}>9</button>
-		            <button id="multiply" onClick ={ this.numberDisplay('X')}>X</button>
+		            <button id="multiply" onClick ={ () => this.appendReset('X')}>X</button>
 		         </div>
 		         <div class="b">
 		            <button id="six" onClick ={() => this.numberDisplay('6')}>6</button>
