@@ -1,6 +1,21 @@
 //12/22/19 
 import React from 'react';
 
+// program  + / - button
+// as you enter numbers into fragment expression make placement commas 
+// program deciaml restriction logic 
+// program expression history display 
+//tuesday
+// program parsenthesis buttons 
+// program = operator button 
+// wednesdday
+// program  % , Sqrt, x^3, X^2, 
+// thursday
+// program a !! ANOTHER COMPONENT solution history section
+// add REDUX to your app
+// connect to an APi in Your APP
+// make it look pretty
+
 class Calculator extends React.Component{
 	constructor(props){
 		super(props);
@@ -10,14 +25,15 @@ class Calculator extends React.Component{
 		};
 	};
 
-	// MIMIC the windows built in calculator
-	// enter a series of numbers once a arithmetic operator is entered 
-	// 1) display the number string entered followed by the operator entered 
-	// 2) clear the bottom display of numbers
     	numberDisplay = (input) => {
     		//accept button input and prevent preceding trailing zeros
     		if( this.state.expFrag === '0' && input === '0'){
     			return;
+    		}else if (this.state.expFrag === '0' && input != '0'){
+    			this.setState({
+    				expFrag:input,
+    				expression:this.state.expression
+    		  	});
     		}else{
     		  this.setState({
     			expFrag:this.state.expFrag.concat(input),
@@ -38,35 +54,42 @@ class Calculator extends React.Component{
     			expFrag:'0',
     			expression: this.state.expression
     		});
-    		// alert(this.state.expression);
     	};
 
-    	// program the alert function to wait before executing
+    	//appends the operator to the numbers to be calculated and clears the display forthe next set of numbers to inputted as well.
     	appendReset = (operator) =>{
-    		this.numberDisplay(operator ,alert(this.state.expFrag) );
-    	}
+    		this.numberDisplay(operator);
+    		setTimeout(()=>{this.expAppend()},10);
+    		setTimeout(()=>{this.resetExpFrag()},10);
+    	};
 
-    	clearEntry = () => {
+    	clearEntry= () => {
     		this.setState({
-    			expFrag:'0'
+    			expFrag:'0',
+    			expression: this.state.expression
     		});
+    	};
+
+    	clear = () => {
+    		this.setState({
+    			expFrag: '0' ,
+    			expression:''});
     	};
 
     //deletes the character at the end of the state display string
     backspace = () =>{
     	//slice portion and set
-    	if( this.state.display.length == 1){
+    	if( this.state.expFrag.length == 1){
     		this.setState({
     			expFrag:'0'
     		})
     	}else{
 	    	let stateCopy = {...this.state};
-	    	let stateCopySliced = stateCopy.display.slice(0,stateCopy.display.length-1);
 	    	this.setState({
-	    		expFrag:stateCopySliced
-	    	})
-	    }
-    }
+	    		expFrag:stateCopy.expFrag.slice(0,stateCopy.expFrag.length - 1)
+	    	});
+	    };
+    };
     
 	render(){
 		return(
@@ -76,7 +99,7 @@ class Calculator extends React.Component{
 		          <input id="display" dir="rtl" value={this.state.expFrag}/><br/>
 		          <div class="b">
 		            <button id="clearEntry" onClick={ () => this.clearEntry()}>CE</button>
-		            <button id="allClear" >C</button>
+		            <button id="allClear" onClick={ () => this.clear()}>C</button>
 		            <button id="backspace" onClick={() => this.backspace()}>bck</button>
 		            <button id="division"onClick={() => this.appendReset('/')}>/</button>
 		         </div>
@@ -90,13 +113,13 @@ class Calculator extends React.Component{
 		            <button id="six" onClick ={() => this.numberDisplay('6')}>6</button>
 		            <button id="five" onClick ={() => this.numberDisplay('5')}>5</button>
 		            <button id="four" onClick ={() => this.numberDisplay('4')}>4</button>
-		            <button id="subtract" onClick ={() => this.numberDisplay('-')}>-</button>
+		            <button id="subtract" onClick ={() => this.appendReset('-')}>-</button>
 		         </div>
 		         <div class="b">
 		            <button id="one" onClick ={() => this.numberDisplay('1')}>1</button>
 		            <button id="two" onClick ={() => this.numberDisplay('2')}>2</button>
 		            <button id="three" onClick ={() => this.numberDisplay('3')}>3</button>
-		            <button id="add" onClick ={() => this.numberDisplay('+')}>+</button>
+		            <button id="add" onClick ={() => this.appendReset('+')}>+</button>
 		         </div>
 		         <div class="b">
 		            <button id="sign">+/-</button>
