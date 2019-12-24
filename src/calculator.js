@@ -1,4 +1,4 @@
-//12/22/19 
+//12/24/19 
 import React from 'react';
 
 // program  + / - button
@@ -90,6 +90,24 @@ class Calculator extends React.Component{
 	    	});
 	    };
     };
+
+    sign = () => {
+        let expFragCpy = [...this.state.expFrag]; 
+        //if it contains a dash remove it if not add one.
+        // make sure a dash isnt added when the state is "0"
+        if(this.state.expFrag.includes("+") === false){
+            expFragCpy.splice(0,0,"+"); // why is the dash being pushed into the BACK???????
+            this.setState({
+                expFrag: expFragCpy.join(""),
+                expression: this.state.expression
+            });
+        }else{
+            this.setState({
+                expFrag: expFragCpy.shift(),
+                expression: this.state.expression
+            });
+        }
+    };
     
 	render(){
 		return(
@@ -122,7 +140,7 @@ class Calculator extends React.Component{
 		            <button id="add" onClick ={() => this.appendReset('+')}>+</button>
 		         </div>
 		         <div class="b">
-		            <button id="sign">+/-</button>
+		            <button id="sign" onClick ={() => this.sign()}>+/-</button>
 		            <button id="zero" onClick ={() => this.numberDisplay('0')}>0</button>
 		            <button id="decimal" onClick ={() => this.numberDisplay('.')}>.</button>
 		            <button id="result">=</button>
