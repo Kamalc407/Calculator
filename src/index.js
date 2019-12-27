@@ -5,6 +5,12 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(<App />, document.getElementById('root'));
+window.addEventListener("keydown", check,false);
+function check(key){
+	if(key.keyCode == "65"){
+		alert("A has been pressed");
+	}
+}
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

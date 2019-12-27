@@ -1,20 +1,24 @@
-//12/24/19 
+//12/26/19 
 import React from 'react';
-
-// program  + / - button
-// as you enter numbers into fragment expression make placement commas 
 // program deciaml restriction logic 
-// program expression history display 
-//tuesday
 // program parsenthesis buttons 
 // program = operator button 
-// wednesdday
+// as you enter numbers into fragment expression make placement commas 
+// program expression history display 
+//program all number keys into your app
 // program  % , Sqrt, x^3, X^2, 
-// thursday
 // program a !! ANOTHER COMPONENT solution history section
 // add REDUX to your app
 // connect to an APi in Your APP
 // make it look pretty
+
+window.addEventListener("keydown", check,false);
+function check(key){
+    if(key.keyCode == "49" || key.keyCode == "35"){
+        alert("1 Key has been pressed");
+    }
+}
+
 
 class Calculator extends React.Component{
 	constructor(props){
@@ -92,21 +96,20 @@ class Calculator extends React.Component{
     };
 
     sign = () => {
-        let expFragCpy = [...this.state.expFrag]; 
-        //if it contains a dash remove it if not add one.
-        // make sure a dash isnt added when the state is "0"
-        if(this.state.expFrag.includes("+") === false){
-            expFragCpy.splice(0,0,"+"); // why is the dash being pushed into the BACK???????
+        let exp = this.state.expFrag; 
+        if(exp.includes("-") === false){
+            exp.push("-"); 
             this.setState({
-                expFrag: expFragCpy.join(""),
+                expFrag: exp.join(""),
                 expression: this.state.expression
             });
         }else{
+            exp.splice(exp.indexOf("-"), 1);
             this.setState({
-                expFrag: expFragCpy.shift(),
+                expFrag: exp.join(""),
                 expression: this.state.expression
             });
-        }
+        };
     };
     
 	render(){
