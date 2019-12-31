@@ -1,4 +1,4 @@
-//12/26/19 
+//12/27/19 
 import React from 'react';
 // program deciaml restriction logic 
 // program parsenthesis buttons 
@@ -30,20 +30,25 @@ class Calculator extends React.Component{
 	};
 
     	numberDisplay = (input) => {
-    		//accept button input and prevent preceding trailing zeros
-    		if( this.state.expFrag === '0' && input === '0'){
-    			return;
-    		}else if (this.state.expFrag === '0' && input != '0'){
-    			this.setState({
-    				expFrag:input,
-    				expression:this.state.expression
-    		  	});
-    		}else{
-    		  this.setState({
-    			expFrag:this.state.expFrag.concat(input),
-    			expression:this.state.expression
-    		  });
-    		};
+    		//decimal isnt placed at the end of the string. 
+            //decimal  replaces "0" at the beginning of the state.
+            if(this.state.expFrag.includes('.') == true && input === '.'){
+                return;
+            }else{
+        		if( this.state.expFrag === '0' && input === '0'){
+        			return;
+        		}else if (this.state.expFrag === '0' && input != '0'){
+        			this.setState({
+        				expFrag:input,
+        				expression:this.state.expression
+        		  	});
+        		}else{
+        		  this.setState({
+        			expFrag:this.state.expFrag.concat(input),
+        			expression:this.state.expression
+        		  });
+        		};
+            };
     	};
    
     	expAppend = () => {
@@ -60,14 +65,14 @@ class Calculator extends React.Component{
     		});
     	};
 
-    	//appends the operator to the numbers to be calculated and clears the display forthe next set of numbers to inputted as well.
+    	//appends the operator to the numbers to be calculated and clears the display for the next set of numbers to inputted as well.
     	appendReset = (operator) =>{
     		this.numberDisplay(operator);
     		setTimeout(()=>{this.expAppend()},10);
     		setTimeout(()=>{this.resetExpFrag()},10);
     	};
 
-    	clearEntry= () => {
+    	clearEntry = () => {
     		this.setState({
     			expFrag:'0',
     			expression: this.state.expression
@@ -86,7 +91,7 @@ class Calculator extends React.Component{
     	if( this.state.expFrag.length == 1){
     		this.setState({
     			expFrag:'0'
-    		})
+    		});
     	}else{
 	    	let stateCopy = {...this.state};
 	    	this.setState({
@@ -96,7 +101,7 @@ class Calculator extends React.Component{
     };
 
     sign = () => {
-        let exp = this.state.expFrag; 
+        let exp = [...this.state.expFrag]; 
         if(exp.includes("-") === false){
             exp.push("-"); 
             this.setState({
