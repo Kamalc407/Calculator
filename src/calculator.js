@@ -1,23 +1,15 @@
-//12/27/19 
+//12/31/19 
 import React from 'react';
 // program deciaml restriction logic 
 // program parsenthesis buttons 
 // program = operator button 
 // as you enter numbers into fragment expression make placement commas 
 // program expression history display 
-//program all number keys into your app
 // program  % , Sqrt, x^3, X^2, 
 // program a !! ANOTHER COMPONENT solution history section
 // add REDUX to your app
 // connect to an APi in Your APP
 // make it look pretty
-
-window.addEventListener("keydown", check,false);
-function check(key){
-    if(key.keyCode == "49" || key.keyCode == "35"){
-        alert("1 Key has been pressed");
-    }
-}
 
 
 class Calculator extends React.Component{
@@ -28,6 +20,10 @@ class Calculator extends React.Component{
 			expression:''
 		};
 	};
+
+        componentDidMount(){
+            this.keypress();
+        }
 
     	numberDisplay = (input) => {
     		//decimal isnt placed at the end of the string. 
@@ -115,6 +111,51 @@ class Calculator extends React.Component{
                 expression: this.state.expression
             });
         };
+    };
+
+    keypress = () => {
+        window.addEventListener(
+            "keydown", 
+            (key) =>{ 
+                if(key.keyCode == "97"){
+                    this.numberDisplay('1');
+                }else if (key.keyCode == "98"){
+                    this.numberDisplay('2');
+                }else if (key.keyCode == "99"){
+                    this.numberDisplay('3');
+                }else if (key.keyCode == "100"){
+                    this.numberDisplay('4');
+                }else if (key.keyCode == "101"){
+                    this.numberDisplay('5');
+                }else if (key.keyCode == "102"){
+                    this.numberDisplay('6');
+                }else if (key.keyCode == "103"){
+                    this.numberDisplay('7');
+                }else if (key.keyCode == 104){
+                    this.numberDisplay('8');
+                }else if (key.keyCode == "105"){
+                    this.numberDisplay('9');
+                }else if (key.keyCode == "104"){
+                    this.numberDisplay('8');
+                }else if (key.keyCode == "8"){
+                    this.backspace();
+                }else if (key.keyCode == "110"){
+                    this.numberDisplay('.');
+                }else if (key.keyCode == "111"){
+                    this.appendReset('/');
+                }else if (key.keyCode == "106"){
+                    this.appendReset('*');
+                }else if (key.keyCode == 109){
+                    this.appendReset('-');
+                }else if (key.keycode == 32){
+                    this.clearEntry();
+                }else if (key.keycode == '96' || key.keycode == '45'){
+                    this.numberDisplay('0');
+                }else  {
+                    this.appendReset('+');
+                }
+        },false);
+        
     };
     
 	render(){
