@@ -1,7 +1,8 @@
-//1/2/20
+//1/4/20
 import React from 'react';
 
-
+//BUG when an answer has a sign switching the sign breaks the app
+//?? Why does ommitting () => from the onclick call back object cause the method you place inside to fire everytime you press any button? 
 // program = operator button 
 // WHEN BROWSER RESIZES BUTTONS SHRINK .add responsivenes to calculator  
 // as you enter numbers into fragment expression make placement commas 
@@ -10,6 +11,7 @@ import React from 'react';
 // program a !! ANOTHER COMPONENT solution history section
 // add REDUX to your app
 // connect to an APi in Your APP
+//refactor kepresses() & numberdisplay()
 // program parsenthesis buttons 
 // make it look pretty
 
@@ -77,6 +79,7 @@ class Calculator extends React.Component{
     	//appends the operator to the numbers to be calculated and clears the display for the next set of numbers to inputted as well.
     	appendReset = (operator) =>{
     		this.numberDisplay(operator);
+            console.log(this.state.expFrag)
     		setTimeout(()=>{this.expAppend()},10);
     		setTimeout(()=>{this.resetExpFrag()},10);
     	};
@@ -162,11 +165,26 @@ class Calculator extends React.Component{
                     this.appendReset('*');
                 }else if (key.keyCode === 109){
                     this.appendReset('-');
-                }else if (key.keycode === 32){
+                }else if (key.keyCode === 32){
                     this.clearEntry();
+                }else if (key.keyCode === 13){
+                    this.calculate();
                 }
         },false);
         
+    };
+
+    calculate = () => {
+      let newexp, sum;
+      if(this.state.expression.includes("-") === true){
+        newexp = this.state.expression.slice(0,this.state.expression.indexOf("-"));
+      }
+      sum = (Number(newexp) - Number(this.state.expFrag));
+      this.setState({
+        expFrag: sum.toString(),
+        expression:this.state.expression
+      });
+
     };
     
     
@@ -205,56 +223,12 @@ class Calculator extends React.Component{
 		            <button id="sign" onClick ={() => this.sign()}>+/-</button>
 		            <button id="zero" onClick ={() => this.numberDisplay('0')}>0</button>
 		            <button id="decimal" onClick ={() => this.numberDisplay('.')}>.</button>
-		            <button id="result">=</button>
+                    <button id="decimal" onClick = {() => console.log("expFrag: " + this.state.expFrag + "  expression: " + this.state.expression )}>Test</button>
+		            <button id="result" onClick = {() => this.calculate()}>=</button>
 		         </div>
 	        </div>
         </div>);
-	}
-};
+	};
+}; 
 
 export default Calculator;
-
-// keypress = () => {
-//         window.addEventListener(
-//             "keydown", 
-//             (key) =>{ 
-//                 if(key.keyCode === "97"){
-//                     this.numberDisplay('1');
-//                 // }else if (key.keyCode === 98){
-//                 //     this.numberDisplay('2');
-//                 // }else if (key.keyCode === 99){
-//                 //     this.numberDisplay('3');
-//                 // }else if (key.keyCode === 100){
-//                 //     this.numberDisplay('4');
-//                 // }else if (key.keyCode === 101){
-//                 //     this.numberDisplay('5');
-//                 // }else if (key.keyCode === 102){
-//                 //     this.numberDisplay('6');
-//                 // }else if (key.keyCode === 103){
-//                 //     this.numberDisplay('7');
-//                 // }else if (key.keyCode === 104){
-//                 //     this.numberDisplay('8');
-//                 // }else if (key.keyCode === 105){
-//                 //     this.numberDisplay('9');
-//                 // }else if (key.keyCode === 104){
-//                 //     this.numberDisplay('8');
-//                 // }else if (key.keyCode === 8){
-//                 //     this.backspace();
-//                 // }else if (key.keyCode === 110){
-//                 //     this.numberDisplay('.');
-//                 // }else if (key.keyCode === 111){
-//                 //     this.appendReset('/');
-//                 // }else if (key.keyCode === 106){
-//                 //     this.appendReset('*');
-//                 // }else if (key.keyCode === 109){
-//                 //     this.appendReset('-');
-//                 // }else if (key.keycode === 32){
-//                 //     this.clearEntry();
-//                 // }else if (key.keycode === 96 || key.keycode === 45){
-//                 //     this.numberDisplay('0');
-//                 }else {
-//                     this.appendReset('+');
-//                 }
-//         },false);
-        
-//     };
