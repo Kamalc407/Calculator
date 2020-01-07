@@ -1,19 +1,22 @@
-//1/4/20
+//1/6/20
 import React from 'react';
 
+//??  Why does ommitting () => from the onclick call back object cause the method you place inside to fire everytime you press any button? 
+//++  refactor code (Find methods that are W.E.T and make D.R.Y && seperate concerns)
+
 //BUG when an answer has a sign switching the sign breaks the app
-//?? Why does ommitting () => from the onclick call back object cause the method you place inside to fire everytime you press any button? 
+//BUG when the answer to an expression is 0 zero the expressions after get stuck on zero
 // program = operator button 
 // WHEN BROWSER RESIZES BUTTONS SHRINK .add responsivenes to calculator  
 // as you enter numbers into fragment expression make placement commas 
-// program expression history display 
-// program  % , Sqrt, x^3, X^2, 
+// make it look pretty
+//OPTIONAL CLOSE UP SHOP AND MOVE ON!
 // program a !! ANOTHER COMPONENT solution history section
 // add REDUX to your app
 // connect to an APi in Your APP
 //refactor kepresses() & numberdisplay()
 // program parsenthesis buttons 
-// make it look pretty
+
 
 let style2 ={
         textAlign:'right'
@@ -42,7 +45,7 @@ class Calculator extends React.Component{
                         expFrag:this.state.expFrag.concat(input),
                         expression:this.state.expression
                     });
-                }else if (this.state.expFrag === '0' && input != '0'){
+                }else if (this.state.expFrag === '0' && input !== '0'){
         			this.setState({
         				expFrag:input,
         				expression:this.state.expression
@@ -55,35 +58,78 @@ class Calculator extends React.Component{
         		};
             };
     	};
-
-        appender = (num) =>{
-            let exp = this.state.expFrag;
-            return setTimeout(num =>exp.concat(num),10);
-            //(this.state.expFrag.includes('.') is not a function
-        }
    
     	expAppend = () => {
     		this.setState({
     			expFrag: this.state.expFrag,
-    			expression: this.state.expression.concat(this.state.expFrag)
+    			expression: this.state.expFrag
     		});
     	};
 
     	resetExpFrag = () => {
     		this.setState({
     			expFrag:'0',
-    			expression: this.state.expression
+    			expression: this.state.expFrag
     		});
     	};
 
     	//appends the operator to the numbers to be calculated and clears the display for the next set of numbers to inputted as well.
     	appendReset = (operator) =>{
     		this.numberDisplay(operator);
-            console.log(this.state.expFrag)
+            // console.log(this.state.expFrag)
     		setTimeout(()=>{this.expAppend()},10);
     		setTimeout(()=>{this.resetExpFrag()},10);
     	};
 
+        // program a separate function for all operators
+        // once an operator button is pushed the running total is started and keeps rolling 
+        //
+        subtract = () => {
+              let newexp;
+              if(this.state.expression.includes("-") === true){
+                newexp = this.state.expression.slice(0,this.state.expression.indexOf("-"));
+              }
+              return (Number(newexp) - Number(this.state.expFrag)).toString();
+         
+        };
+        add = () => {
+              let newexp;
+              if(this.state.expression.includes("+") === true){
+                newexp = this.state.expression.slice(0,this.state.expression.indexOf("-"));
+              }
+              return (Number(newexp) + Number(this.state.expFrag)).toString();
+         
+        };
+        divide = () => {
+              let newexp;
+              if(this.state.expression.includes("/") === true){
+                newexp = this.state.expression.slice(0,this.state.expression.indexOf("-"));
+              }
+              return (Number(newexp) / Number(this.state.expFrag)).toString();
+         
+        };
+        multiply = () => {
+              let newexp;
+              if(this.state.expression.includes("*") === true){
+                newexp = this.state.expression.slice(0,this.state.expression.indexOf("-"));
+              }
+              return (Number(newexp) * Number(this.state.expFrag)).toString();
+         
+        };
+
+        //creates a running total from the expression piece by piece.
+        total = ()=>{
+            let answer = 0;
+
+        }
+
+        answer = () => {
+            this.setState({
+                expFrag: answer.toString(),
+                expression: answer.toString()
+            });
+        };
+    
     	clearEntry = () => {
     		this.setState({
     			expFrag:'0',
@@ -174,21 +220,7 @@ class Calculator extends React.Component{
         
     };
 
-    calculate = () => {
-      let newexp, sum;
-      if(this.state.expression.includes("-") === true){
-        newexp = this.state.expression.slice(0,this.state.expression.indexOf("-"));
-      }
-      sum = (Number(newexp) - Number(this.state.expFrag));
-      this.setState({
-        expFrag: sum.toString(),
-        expression:this.state.expression
-      });
-
-    };
     
-    
-        
 	render(){
 		return(
 	   <div>
@@ -232,3 +264,19 @@ class Calculator extends React.Component{
 }; 
 
 export default Calculator;
+
+// calculate = () => {
+//           let newexp, sum;
+//           if(this.state.expression.includes("-") === true){
+//             newexp = this.state.expression.slice(0,this.state.expression.indexOf("-"));
+//           }
+//           sum = (Number(newexp) - Number(this.state.expFrag));
+//           console.log( Number(newexp) +" - "+ Number(this.state.expFrag) + " = "+ sum);
+//           console.log( "expression: "+ this.state.expression +"  expFrag: "+ this.state.expFrag);
+//           this.setState({
+//             expFrag: sum.toString(),
+//             expression: sum.toString()
+//           });
+//               // expression has the answer duplicated 
+//               // append reset is getting called when u press - so its appending the expression to theanswer
+//             };
