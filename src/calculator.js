@@ -1,12 +1,11 @@
-//1/6/20
+//1/8/20
 import React from 'react';
 
 //??  Why does ommitting () => from the onclick call back object cause the method you place inside to fire everytime you press any button? 
 //++  refactor code (Find methods that are W.E.T and make D.R.Y && seperate concerns)
 
-//BUG when an answer has a sign switching the sign breaks the app
-//BUG when the answer to an expression is 0 zero the expressions after get stuck on zero
-// program = operator button 
+// program expression input box 
+// QA --> find bugs n fix
 // WHEN BROWSER RESIZES BUTTONS SHRINK .add responsivenes to calculator  
 // as you enter numbers into fragment expression make placement commas 
 // make it look pretty
@@ -59,77 +58,41 @@ class Calculator extends React.Component{
             };
     	};
    
-    	expAppend = () => {
-    		this.setState({
-    			expFrag: this.state.expFrag,
-    			expression: this.state.expFrag
-    		});
-    	};
+    	// expAppend = () => {
+    	// 	this.setState({
+    	// 		expFrag: this.state.expFrag,
+    	// 		expression: this.state.expFrag
+    	// 	});
+    	// };
 
-    	resetExpFrag = () => {
-    		this.setState({
-    			expFrag:'0',
-    			expression: this.state.expFrag
-    		});
-    	};
-
-    	//appends the operator to the numbers to be calculated and clears the display for the next set of numbers to inputted as well.
-    	appendReset = (operator) =>{
-    		this.numberDisplay(operator);
-            // console.log(this.state.expFrag)
-    		setTimeout(()=>{this.expAppend()},10);
-    		setTimeout(()=>{this.resetExpFrag()},10);
-    	};
-
-        // program a separate function for all operators
-        // once an operator button is pushed the running total is started and keeps rolling 
-        //
-        subtract = () => {
-              let newexp;
-              if(this.state.expression.includes("-") === true){
-                newexp = this.state.expression.slice(0,this.state.expression.indexOf("-"));
-              }
-              return (Number(newexp) - Number(this.state.expFrag)).toString();
-         
-        };
-        add = () => {
-              let newexp;
-              if(this.state.expression.includes("+") === true){
-                newexp = this.state.expression.slice(0,this.state.expression.indexOf("-"));
-              }
-              return (Number(newexp) + Number(this.state.expFrag)).toString();
-         
-        };
-        divide = () => {
-              let newexp;
-              if(this.state.expression.includes("/") === true){
-                newexp = this.state.expression.slice(0,this.state.expression.indexOf("-"));
-              }
-              return (Number(newexp) / Number(this.state.expFrag)).toString();
-         
-        };
-        multiply = () => {
-              let newexp;
-              if(this.state.expression.includes("*") === true){
-                newexp = this.state.expression.slice(0,this.state.expression.indexOf("-"));
-              }
-              return (Number(newexp) * Number(this.state.expFrag)).toString();
-         
-        };
-
-        //creates a running total from the expression piece by piece.
-        total = ()=>{
-            let answer = 0;
-
-        }
-
+    	//take expression which should be " # operator # = ". and replace the state with the answer.
+        // for tunning total at the end of every operand function should be a call to the calculate function
         answer = () => {
+            let total = 0,
+                expression = this.state.expression + this.state.expFrag;
+
+            let answer = eval(expression);
             this.setState({
                 expFrag: answer.toString(),
-                expression: answer.toString()
+                expression: this.state.expression
             });
+
         };
-    
+
+
+
+
+
+
+
+
+    	//appends the operator to the numbers to be calculated and clears the display for the next set of numbers to inputted as well.
+    	appendOp = (operator) =>{
+    		this.numberDisplay(operator);
+            // console.log(this.state.expFrag)
+    		// setTimeout(()=>{this.expAppend()},10);
+    	};
+
     	clearEntry = () => {
     		this.setState({
     			expFrag:'0',
@@ -206,15 +169,15 @@ class Calculator extends React.Component{
                 }else if (key.keyCode === 110){
                     this.numberDisplay('.');
                 }else if (key.keyCode === 111){
-                    this.appendReset('/');
+                    this.appendOp('/');
                 }else if (key.keyCode === 106){
-                    this.appendReset('*');
+                    this.appendOp('*');
                 }else if (key.keyCode === 109){
-                    this.appendReset('-');
+                    this.appendOp('-');
                 }else if (key.keyCode === 32){
                     this.clearEntry();
                 }else if (key.keyCode === 13){
-                    this.calculate();
+                    this.answer();
                 }
         },false);
         
@@ -226,37 +189,38 @@ class Calculator extends React.Component{
 	   <div>
 			 <h1>Calculator</h1>
 	         <div id="parent">
+                  <input id="display" style={style2} value={this.state.expression}/><br/>
 		          <input id="display" style={style2} value={this.state.expFrag}/><br/>
 		          <div className="b">
 		            <button id="clearEntry" onClick={ () => this.clearEntry()}>CE</button>
 		            <button id="allClear" onClick={ () => this.clear()}>C</button>
 		            <button id="backspace" onClick={() => this.backspace()}>bck</button>
-		            <button id="division"onClick={() => this.appendReset('/')}>/</button>
+		            <button id="division"onClick={() => this.appendOp('/')}>/</button>
 		         </div>
 		         <div className="b">
 		            <button id="seven" onClick ={() => this.numberDisplay('7')}>7</button> 
 		            <button id="eight" onClick ={() => this.numberDisplay('8')}>8</button>
 		            <button id="nine" onClick ={() => this.numberDisplay('9')}>9</button>
-		            <button id="multiply" onClick ={ () => this.appendReset('X')}>X</button>
+		            <button id="multiply" onClick ={ () => this.appendOp('*')}>X</button>
 		         </div>
 		         <div className="b">
 		            <button id="six" onClick ={() => this.numberDisplay('6')}>6</button>
 		            <button id="five" onClick ={() => this.numberDisplay('5')}>5</button>
 		            <button id="four" onClick ={() => this.numberDisplay('4')}>4</button>
-		            <button id="subtract" onClick ={() => this.appendReset('-')}>-</button>
+		            <button id="subtract" onClick ={() => this.appendOp('-')}>-</button>
 		         </div>
 		         <div className="b">
 		            <button id="one" onClick ={() => this.numberDisplay('1')}>1</button>
 		            <button id="two" onClick ={() => this.numberDisplay('2')}>2</button>
 		            <button id="three" onClick ={() => this.numberDisplay('3')}>3</button>
-		            <button id="add" onClick ={() => this.appendReset('+')}>+</button>
+		            <button id="add" onClick ={() => this.appendOp('+')}>+</button>
 		         </div>
 		         <div className="b">
 		            <button id="sign" onClick ={() => this.sign()}>+/-</button>
 		            <button id="zero" onClick ={() => this.numberDisplay('0')}>0</button>
 		            <button id="decimal" onClick ={() => this.numberDisplay('.')}>.</button>
                     <button id="decimal" onClick = {() => console.log("expFrag: " + this.state.expFrag + "  expression: " + this.state.expression )}>Test</button>
-		            <button id="result" onClick = {() => this.calculate()}>=</button>
+		            <button id="result" onClick = {() => this.answer()}>=</button>
 		         </div>
 	        </div>
         </div>);
