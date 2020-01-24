@@ -10,23 +10,51 @@ body {
 
 
 :root{
-	--buttonwidth:75px;
+	--buttonwidth:100px;
+  --buttonheight:75px;
+  --buttonFont:32px;
+  --inputFont:50px;
+
 };
-/*FLOAT THE PARENTS TO THE LEFT AND CLEAR THE CHILDREN BOTH */
 div{
 	float:left; /*gets each row on oneline*/ 
 	display: inline-block;
 	}
 .b{
 	clear:both; /*stops eachline from sticking to eachother*/
+  margin-left: 20px
   }
 input {
-	width: 309px;
+	width: 400px;
+  height: var(--buttonheight);
 }
 button{
 		width:var(--buttonwidth);
+    height: var(--buttonheight);
+    margin:2px;
+    border-radius: 7px;
+    font-size: 20px;
 	}
+button:hover{
+  background-color: #d3cfff;
+}
+#buttons{
+    background-color: #4103fc;
+    border-radius: 7px;
+}
 
+#parent{
+  background-color: #036bfc;
+  width:500px;
+  margin: auto;
+  border-radius: 7px;
+}
+input{
+    font-size:24px;
+    height:35px;
+  background-color: #036bfc;
+  border:  none;
+}
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;

@@ -1,246 +1,212 @@
-//1/8/20
+//1/24/20
 import React from 'react';
-
-//??  Why does ommitting () => from the onclick call back object cause the method you place inside to fire everytime you press any button? 
-//++  refactor code (Find methods that are W.E.T and make D.R.Y && seperate concerns)
-
-// program expression input box 
-// QA --> find bugs n fix
-// WHEN BROWSER RESIZES BUTTONS SHRINK .add responsivenes to calculator  
-// as you enter numbers into fragment expression make placement commas 
-// make it look pretty
-//OPTIONAL CLOSE UP SHOP AND MOVE ON!
-// program a !! ANOTHER COMPONENT solution history section
-// add REDUX to your app
-// connect to an APi in Your APP
-//refactor kepresses() & numberdisplay()
-// program parsenthesis buttons 
-
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faDivide ,faTimes,faEquals,faMinus,faPlus,faTrashAlt,faBackspace } from '@fortawesome/free-solid-svg-icons'
+// reponsive window
+//put a setTimeout on CALCULATE it doesnt compute after one cmopututation
+//create a README
+//Finalize
+//merge unto github
 let style2 ={
         textAlign:'right'
     };
+
 class Calculator extends React.Component{
 	constructor(props){
 		super(props);
 		this.state = {
-			expFrag:'0',
-			expression:''
+			expression:'0'
 		};
 	};
 
-        componentDidMount(){
-            this.keypress();
-        }
+    componentDidMount(){
+        this.keypress();
+    }
 
-    	numberDisplay = (input) => {
-            if(this.state.expFrag.includes('.') === true && input === '.'){
-                return;
-            }else{
-        		if( this.state.expFrag === '0' && input === '0'){
-        			return;
-        		}else if (this.state.expFrag === '0' && input === '.'){
-                    this.setState({
-                        expFrag:this.state.expFrag.concat(input),
-                        expression:this.state.expression
-                    });
-                }else if (this.state.expFrag === '0' && input !== '0'){
-        			this.setState({
-        				expFrag:input,
-        				expression:this.state.expression
-        		  	});
-        		}else{
-        		  this.setState({
-        			expFrag:this.state.expFrag.concat(input),
-        			expression:this.state.expression
-        		  });
-        		};
-            };
-    	};
-   
-    	// expAppend = () => {
-    	// 	this.setState({
-    	// 		expFrag: this.state.expFrag,
-    	// 		expression: this.state.expFrag
-    	// 	});
-    	// };
+    test = () =>{
+        console.log("expression: " + this.state.expression + "  answer: "+ this.state.answer);
+	}
 
-    	//take expression which should be " # operator # = ". and replace the state with the answer.
-        // for tunning total at the end of every operand function should be a call to the calculate function
-        answer = () => {
-            let total = 0,
-                expression = this.state.expression + this.state.expFrag;
+    input = (number) =>{
+    	let expression = this.state.expression;
+    	if(this.state.expression === '0' && /\d/.test(number) === true ){
+	    		this.setState({
+		    		expression: number
+	    		});
+	    	}else if (this.state.expression === '0' && /\D/.test(number) === true ){
+	    		this.setState({
+			    	expression: this.state.expression.concat(number)
+		    	});
+	    	}else if (this.decimalCheck(number) === true){
+	    		return;
+	    	}else if (/\+|\d-|\\|\*/.test(expression[expression.length - 1]) === true  && /\+|\\|\*/.test(number) === true){
+	    			return;
+	    	}else if (/-/.test(expression[expression.length - 1]) === true  && /-/.test(number) === true){
+	    			let array = [...expression];
+	    			array.splice(array.length - 1,1,"+")
+	    			this.setState({
+			    	expression: array.join('')
+		    	});
+	    			
+	    	}else{
+		    	this.setState({
+			    	expression: this.state.expression.concat(number)
+		    	});
+	    	}
+	};
 
-            let answer = eval(expression);
-            this.setState({
-                expFrag: answer.toString(),
-                expression: this.state.expression
-            });
-
-        };
-
-
-
-
-
-
-
-
-    	//appends the operator to the numbers to be calculated and clears the display for the next set of numbers to inputted as well.
-    	appendOp = (operator) =>{
-    		this.numberDisplay(operator);
-            // console.log(this.state.expFrag)
-    		// setTimeout(()=>{this.expAppend()},10);
-    	};
-
-    	clearEntry = () => {
-    		this.setState({
-    			expFrag:'0',
-    			expression: this.state.expression
-    		});
-    	};
-
-    	clear = () => {
-    		this.setState({
-    			expFrag: '0' ,
-    			expression:''});
-    	};
-
-    //deletes the character at the end of the state display string
-    backspace = () =>{
-    	//slice portion and set
-    	if( this.state.expFrag.length === 1){
-    		this.setState({
-    			expFrag:'0'
-    		});
-    	}else{
-	    	let stateCopy = {...this.state};
-	    	this.setState({
-	    		expFrag:stateCopy.expFrag.slice(0,stateCopy.expFrag.length - 1)
-	    	});
-	    };
+    calculate = () =>{
+    	// setTimeout( ()=>{this.setState({expression: eval(this.state.expression).toString()}),10});
+    	this.setState({
+    		expression: eval(this.state.expression).toString()
+    	});
     };
+	
 
-    sign = () => {
-        let exp = [...this.state.expFrag]; 
-        if(exp.includes("-") === false){
-            exp.splice(0,0,'-'); 
-            this.setState({
-                expFrag: exp.join(""),
-                expression: this.state.expression
-            });
-        }else{
-            exp.splice(exp.indexOf("-"), 1);
-            this.setState({
-                expFrag: exp.join(""),
-                expression: this.state.expression
-            });
-        };
-    };
+	// if + / * come ofer operator replace it 
+	//keypresses 
+    decimalCheck = (input)=>{
+    	let expression = this.state.expression;
+    	let stopInput;
+    	let  target;
+    	if( /\+|\d-|\\|\*/.test(expression) === false && expression.includes('.') === true && input === '.'){
+    		stopInput = true;
+    	}else if( /\+|\d-|\\|\*/.test(expression) === true ){
+			for (var i = expression.length - 1; i >= 0; i--) {
+					if(/\+|\d-|\\|\*/.test(expression[i]) === true){
+						target = i;
+						break;
+					}
+			}
+			if(expression.slice(target,expression.length).includes('.') === true  && input === '.'){
+					stopInput = true;
+			}
+    	}
+    	return stopInput;
+    }
 
     keypress = () => {
         window.addEventListener(
             "keydown", 
             (key) =>{ 
-                if(key.keyCode === 97){
-                    this.numberDisplay('1');
-                }else if (key.keyCode === 98){
-                    this.numberDisplay('2');
-                }else if (key.keyCode === 99){
-                    this.numberDisplay('3');
-                }else if (key.keyCode === 100){
-                    this.numberDisplay('4');
-                }else if (key.keyCode === 101){
-                    this.numberDisplay('5');
-                }else if (key.keyCode === 102){
-                    this.numberDisplay('6');
-                }else if (key.keyCode === 103){
-                    this.numberDisplay('7');
-                }else if (key.keyCode === 104){
-                    this.numberDisplay('8');
-                }else if (key.keyCode === 105){
-                    this.numberDisplay('9');
-                }else if (key.keyCode === 104){
-                    this.numberDisplay('8');
-                }else if (key.keyCode === 96){
-                    this.numberDisplay('0');
-                }else if (key.keyCode === 8){
-                    this.backspace();
-                }else if (key.keyCode === 110){
-                    this.numberDisplay('.');
-                }else if (key.keyCode === 111){
-                    this.appendOp('/');
-                }else if (key.keyCode === 106){
-                    this.appendOp('*');
-                }else if (key.keyCode === 109){
-                    this.appendOp('-');
-                }else if (key.keyCode === 32){
-                    this.clearEntry();
-                }else if (key.keyCode === 13){
-                    this.answer();
+            	// if(key.which === 97){
+            	// 	this.input("1");
+            	// }else{
+            	// 	this.input("2");
+            	// }
+                switch(key.which){
+                	case 96:
+                		this.input("0");
+                	break;
+                	case 97:
+                		this.input("1");
+                	break;
+                	case 98:
+                		this.input("2");
+                	break;
+                	case 99:
+                		this.input("3");
+                	break;
+                	case 100:
+                		this.input("4");
+                	break;
+                	case 101:
+                		this.input("5");
+                	break;
+                	case 102:
+                		this.input("6");
+                	break;
+                	case 103:
+                		this.input("7");
+                	break;
+                	case 104:
+                		this.input("8");
+                	break;
+                	case 105:
+                		this.input("9");
+                	break;
+                	case 107:
+                		this.input("+");
+                	break;
+                	case 109:
+                		this.input("-");
+                	break;
+                	case 110:
+                		this.input(".");
+                	break;
+                	case 106:
+                		this.input("*");
+                	break;
+                	case 111:
+                		this.input("/");
+                	break;
+                	case 13:
+                		this.calculate();
+                	break;
+                	default:
+                	 return;
                 }
-        },false);
+       		 },false);
         
     };
 
+    clearExpression = ()=>{
+        this.setState({
+            expression:"0"
+         });
+    };
     
+    backspace = () => {
+    	let expr = [...this.state.expression];
+    	expr.splice(expr.length -1, 1);
+
+    	this.setState({
+    		expression: expr.join("")
+    	});
+    };
+    // <FontAwesomeIcon icon="check-square" />
 	render(){
 		return(
 	   <div>
 			 <h1>Calculator</h1>
+
 	         <div id="parent">
-                  <input id="display" style={style2} value={this.state.expression}/><br/>
-		          <input id="display" style={style2} value={this.state.expFrag}/><br/>
-		          <div className="b">
-		            <button id="clearEntry" onClick={ () => this.clearEntry()}>CE</button>
-		            <button id="allClear" onClick={ () => this.clear()}>C</button>
-		            <button id="backspace" onClick={() => this.backspace()}>bck</button>
-		            <button id="division"onClick={() => this.appendOp('/')}>/</button>
-		         </div>
-		         <div className="b">
-		            <button id="seven" onClick ={() => this.numberDisplay('7')}>7</button> 
-		            <button id="eight" onClick ={() => this.numberDisplay('8')}>8</button>
-		            <button id="nine" onClick ={() => this.numberDisplay('9')}>9</button>
-		            <button id="multiply" onClick ={ () => this.appendOp('*')}>X</button>
-		         </div>
-		         <div className="b">
-		            <button id="six" onClick ={() => this.numberDisplay('6')}>6</button>
-		            <button id="five" onClick ={() => this.numberDisplay('5')}>5</button>
-		            <button id="four" onClick ={() => this.numberDisplay('4')}>4</button>
-		            <button id="subtract" onClick ={() => this.appendOp('-')}>-</button>
-		         </div>
-		         <div className="b">
-		            <button id="one" onClick ={() => this.numberDisplay('1')}>1</button>
-		            <button id="two" onClick ={() => this.numberDisplay('2')}>2</button>
-		            <button id="three" onClick ={() => this.numberDisplay('3')}>3</button>
-		            <button id="add" onClick ={() => this.appendOp('+')}>+</button>
-		         </div>
-		         <div className="b">
-		            <button id="sign" onClick ={() => this.sign()}>+/-</button>
-		            <button id="zero" onClick ={() => this.numberDisplay('0')}>0</button>
-		            <button id="decimal" onClick ={() => this.numberDisplay('.')}>.</button>
-                    <button id="decimal" onClick = {() => console.log("expFrag: " + this.state.expFrag + "  expression: " + this.state.expression )}>Test</button>
-		            <button id="result" onClick = {() => this.answer()}>=</button>
-		         </div>
+	         	  <div id="inputBox">
+		          	<input id="display" style={style2} value= {this.state.expression}/><br/>
+	         	  </div>
+	         	  <div id="buttons">
+			          <div className="b">
+			            <button class="endr" id="clear" onClick={()=> this.clearExpression()}><FontAwesomeIcon icon={faTrashAlt}/></button>
+			            <button id="backspace" onClick = {() => this.backspace()}><FontAwesomeIcon icon={faBackspace}/></button>
+			            <button id="divide"onClick={()=> this.input("/")}><FontAwesomeIcon icon={faDivide}/></button>
+			            <button class="endl" id="multiply" onClick={()=> this.input("*")}><FontAwesomeIcon icon={faTimes}/></button>
+			         </div>
+			         <div className="b">
+			            <button class="endr" id="seven" onClick={()=> this.input("7")}>7</button> 
+			            <button id="eight" onClick={()=> this.input("8")}>8</button>
+			            <button id="nine" onClick={()=> this.input("9")}>9</button>
+			            <button class="endl" id="subtract" onClick={()=> this.input("-")}><FontAwesomeIcon icon={faMinus}/></button>
+			         </div>
+			         <div className="b">
+			            <button class="endr" id="six" onClick={()=> this.input("6")}>6</button>
+			            <button id="five" onClick={()=> this.input("5")}>5</button>
+			            <button id="four" onClick={()=> this.input("4")}>4</button>
+			            <button id="add" class="endl"onClick={()=> this.input("+")}><FontAwesomeIcon icon={faPlus}/></button>
+			         </div>
+			         <div className="b">
+			            <button class="endr" id="one" onClick={()=> this.input("1")}>1</button>
+			            <button id="two" onClick={()=> this.input("2")}>2</button>
+			            <button id="three" onClick={()=> this.input("3")}>3</button>
+			            <button class="endl" id="equals" onClick={()=> this.calculate()}><FontAwesomeIcon icon={faEquals}/></button>
+			         </div>
+			         <div className="b">
+			            <button id="zero" onClick={()=> this.input("0")}>0</button>
+			            <button id="decimal" onClick={()=> this.input(".")}>.</button>
+			         </div>
+			      </div>
 	        </div>
         </div>);
 	};
 }; 
 
 export default Calculator;
-
-// calculate = () => {
-//           let newexp, sum;
-//           if(this.state.expression.includes("-") === true){
-//             newexp = this.state.expression.slice(0,this.state.expression.indexOf("-"));
-//           }
-//           sum = (Number(newexp) - Number(this.state.expFrag));
-//           console.log( Number(newexp) +" - "+ Number(this.state.expFrag) + " = "+ sum);
-//           console.log( "expression: "+ this.state.expression +"  expFrag: "+ this.state.expFrag);
-//           this.setState({
-//             expFrag: sum.toString(),
-//             expression: sum.toString()
-//           });
-//               // expression has the answer duplicated 
-//               // append reset is getting called when u press - so its appending the expression to theanswer
-//             };
