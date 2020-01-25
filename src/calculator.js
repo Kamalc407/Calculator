@@ -1,12 +1,7 @@
-//1/24/20
+//1/25/20
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDivide ,faTimes,faEquals,faMinus,faPlus,faTrashAlt,faBackspace } from '@fortawesome/free-solid-svg-icons'
-// reponsive window
-//put a setTimeout on CALCULATE it doesnt compute after one cmopututation
-//create a README
-//Finalize
-//merge unto github
 let style2 ={
         textAlign:'right'
     };
@@ -24,7 +19,7 @@ class Calculator extends React.Component{
     }
 
     test = () =>{
-        console.log("expression: " + this.state.expression + "  answer: "+ this.state.answer);
+        console.log("expression: " + this.state.expression + "  Answer:  "+ eval(this.state.expression));
 	}
 
     input = (number) =>{
@@ -56,15 +51,16 @@ class Calculator extends React.Component{
 	};
 
     calculate = () =>{
-    	// setTimeout( ()=>{this.setState({expression: eval(this.state.expression).toString()}),10});
-    	this.setState({
-    		expression: eval(this.state.expression).toString()
-    	});
+    	console.log("expression Calculated:"+ this.state.expression+" Answer: "+eval(this.state.expression));
+    		this.setState({
+    			expression: eval(this.state.expression).toString()
+    	    });
     };
 	
 
-	// if + / * come ofer operator replace it 
 	//keypresses 
+	//returns true when no operator in expression yet but a decimal in the  expression and in the "variable"
+	//also when 
     decimalCheck = (input)=>{
     	let expression = this.state.expression;
     	let stopInput;
@@ -85,15 +81,18 @@ class Calculator extends React.Component{
     	return stopInput;
     }
 
+    clearExpression = ()=>{
+        this.setState({
+            expression:'0'
+         });
+    };
+
+
+
     keypress = () => {
         window.addEventListener(
             "keydown", 
             (key) =>{ 
-            	// if(key.which === 97){
-            	// 	this.input("1");
-            	// }else{
-            	// 	this.input("2");
-            	// }
                 switch(key.which){
                 	case 96:
                 		this.input("0");
@@ -150,21 +149,23 @@ class Calculator extends React.Component{
         
     };
 
-    clearExpression = ()=>{
-        this.setState({
-            expression:"0"
-         });
-    };
+    
     
     backspace = () => {
     	let expr = [...this.state.expression];
-    	expr.splice(expr.length -1, 1);
 
-    	this.setState({
-    		expression: expr.join("")
-    	});
+    	if(expr.length == 1){
+    		this.setState({
+            	expression:'0'
+         	});
+    	}else{
+    		expr.splice(expr.length -1, 1);
+	    	this.setState({
+	    		expression: expr.join("")
+	    	});
+    	}
+    	
     };
-    // <FontAwesomeIcon icon="check-square" />
 	render(){
 		return(
 	   <div>
@@ -173,10 +174,10 @@ class Calculator extends React.Component{
 	         <div id="parent">
 	         	  <div id="inputBox">
 		          	<input id="display" style={style2} value= {this.state.expression}/><br/>
-	         	  </div>
+	         	  </div>	
 	         	  <div id="buttons">
 			          <div className="b">
-			            <button class="endr" id="clear" onClick={()=> this.clearExpression()}><FontAwesomeIcon icon={faTrashAlt}/></button>
+			            <button class="endr" id="clear" onClick={()=> this.clearExpression()}>C</button>
 			            <button id="backspace" onClick = {() => this.backspace()}><FontAwesomeIcon icon={faBackspace}/></button>
 			            <button id="divide"onClick={()=> this.input("/")}><FontAwesomeIcon icon={faDivide}/></button>
 			            <button class="endl" id="multiply" onClick={()=> this.input("*")}><FontAwesomeIcon icon={faTimes}/></button>
